@@ -1,1 +1,1 @@
-*** Event Retrieval from Video - AICHCM 2024 ***
+Event Retrieval from Video - AICHCM 2024
