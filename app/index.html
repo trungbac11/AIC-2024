@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIC-2024</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <!-- <h3>Image Retrieval with Text and Sketch</h3> -->
+        <!-- <canvas id="drawingCanvas" width="350" height="300"></canvas> -->
+        <!-- <button onclick="handleSubmit()">Send drawing</button> -->
+        <div class="model-selection">
+            <label>
+                <input type="radio" name="model" id="model1" value="model1" checked> ViT
+            </label>
+            <label>
+                <input type="radio" name="model" id="model2" value="model2"> ViT plus
+            </label>
+            <label>
+                <input type="radio" name="model" id="model3" value="model3"> OBJECT
+            </label>
+        </div>        
+        <input type="text" id="filenameInput" placeholder="Enter file name">
+        <input type="text" id="descriptionInput" placeholder="Q&A">
+
+        <div id="selectedItems" class="selected-items">
+            <ul id="selectedList"></ul>
+        </div>          
+        <div class="button-group">
+            <button onclick="exportToCSV()">Export to CSV</button>
+            <button onclick="clearAllCheckboxes()">Clear All</button>
+        </div>
+        <div class="search-container">
+            <input type="text" id="searchSidebar" placeholder="Search objects..." oninput="handleSidebarSearch()" class="search-container" autocomplete="off">
+            <div class="search-container" class="autocomplete-items" id="autocomplete-sidebar-list"></div>
+            <div id="objectQueue" class="selected-items">
+                <ul id="objectList"></ul>
+            </div>
+            <div class="button-group">
+                <button onclick="sendObjects()">Send Objects</button>
+                <button onclick="clearObjects()">Clear Objects</button>
+            </div>
+        </div>
+    </div>
+    <div class="chat-container">
+        <div id="chat" class="chat-history"></div>
+        <div class="chat-input">
+            <input type="text" id="inputField" placeholder="Send a query" onkeydown="handleKeyDown(event)">
+            <button onclick="handleSubmit()">Send</button>
+            <div id="result"></div>
+        </div>
+    </div>
+    <div class="sidebar-right">
+        <h3>Pick up frames</h3>
+        <div id="surroundingImagesContainer"></div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
