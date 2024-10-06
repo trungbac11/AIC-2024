@@ -24,5 +24,6 @@ uvicorn main:app --reload
 ### Demo
 Run this URL in your browser: `http://127.0.0.1:5500/app/index.html`
 
-![image](https://github.com/user-attachments/assets/eafddcb2-65c3-48e0-9df6-9565c7b6e83a)
+![image](https://github.com/user-attachments/assets/3533350b-9c7d-4e01-adb4-7e9dab32e9b2)
+
 
