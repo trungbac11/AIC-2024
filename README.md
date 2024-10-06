@@ -8,7 +8,7 @@
 
 ## Usage
 ### Data preparation
-Download data: ...
+
 ### Setup 
 
 ```bash
