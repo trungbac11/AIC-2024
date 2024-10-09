@@ -51,6 +51,7 @@ with open(mapping_path) as f:
     
 vector_classes = np.load(vector_object)
 
+ObjectPath = {int(key): value for key, value in json_mapping.items()}
 DictImagePath = {int(key): value for key, value in json_dict.items()}
 MAX_ID = len(DictImagePath)
 
@@ -106,9 +107,26 @@ async def send_objects(request: ObjectRequestModel):
         # print(objects)
         # print(vector_classes)
 
-        a = Object.object_search(classes, objects, vector_classes)
-        print (a)
-        return JSONResponse(content={"message": "Objects received successfully", "objects": objects})
+        image_paths = Object.object_search(classes, objects, vector_classes, ObjectPath, DictImagePath)
+        # print (a)
+        
+        image_data = []
+        for path in image_paths:
+            image_name = os.path.basename(path)
+            folder_name = os.path.basename(os.path.dirname(path))
+            
+            # print(image_name)
+            # print(frame_idx)
+            image_url = f"http://127.0.0.1:8000/image/{folder_name}/{image_name}"
+            image_data.append({
+                "image_url": image_url,
+                "image_name": image_name,
+                "folder_name": folder_name,
+            })
+
+        # Return image data as a JSON response
+        return JSONResponse(content={"images": image_data})
+        # return JSONResponse(content={"message": "Objects received successfully", "objects": objects})
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

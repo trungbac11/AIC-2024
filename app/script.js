@@ -28,6 +28,7 @@ async function sendObjects() {
         let payload = {
             objects: selectedObjects,
         };
+        console.log("Payload sent:", payload);  // Kiểm tra dữ liệu gửi đi
 
         // Gửi yêu cầu tới API 
         const response = await fetch('http://127.0.0.1:8000/send_objects/', {
@@ -40,10 +41,18 @@ async function sendObjects() {
 
         if (response.ok) {
             const result = await response.json();
-            console.log(result);
-            alert("Objects sent successfully!");
+            console.log("Response from server:", result);
+            if (result.images && result.images.length > 0) {
+                // Hiển thị ảnh trong phần chat
+                let inputText = `${selectedObjects.join(', ')}`;
+                displayChat(inputText, { images: result.images });  // Gọi hàm displayChat để hiển thị ảnh
+            } else {
+                alert("No images found for the selected objects.");
+            }
         } else {
-            alert("Failed to send objects.");
+            const errorData = await response.json();
+            console.error("Error response:", errorData);
+            alert(`Failed to send objects: ${errorData.detail}`);
         }
     } else {
         alert('No objects selected.');
@@ -319,48 +328,6 @@ function displayChat(input, output) {
     chatContainer.appendChild(inputMessage);
     chatContainer.appendChild(outputMessage);
 }
-// function exportToCSV() {
-//     const filename = document.getElementById('filenameInput').value.trim() || 'selected_images';
-//     const description = document.getElementById('descriptionInput').value.trim() || '';
-//     const checkboxes = document.querySelectorAll('input[name="imageSelect"]:checked');
-
-//     // set để loại bỏ trùng lặp và thu thập dữ liệu từ checkboxes
-//     let dataSet = new Set();
-//     checkboxes.forEach(cb => {
-//         dataSet.add(cb.value);
-//     });
-
-//     // add dữ liệu từ selections nếu chưa tồn tại trong Set
-//     selections.forEach(s => {
-//         if (!dataSet.has(s)) {
-//             dataSet.add(s);
-//         }
-//     });
-
-//     // create csv
-//     let csvContent = "data:text/csv;charset=utf-8,";
-//     // csvContent += "Video ID,Frame ID\r\n";
-
-//     dataSet.forEach(item => {
-//         const parts = item.split('_');
-//         let frameId = parts[0];
-//         const videoId = parts.slice(1).join('_');
-//         frameId = parseInt(frameId, 10);
-//         csvContent += description ? `${videoId},${frameId},${description}\r\n` : `${videoId},${frameId}\r\n`;
-//     });
-
-//     // download csv
-//     const encodedUri = encodeURI(csvContent);
-//     const link = document.createElement("a");
-//     link.setAttribute("href", encodedUri);
-//     link.setAttribute("download", `${filename}.csv`);
-//     link.style.visibility = 'hidden';
-//     document.body.appendChild(link);
-    
-//     link.click();
-//     document.body.removeChild(link);
-// }
-
 
 function exportToCSV() {
     const filename = document.getElementById('filenameInput').value.trim() || 'selected_images';

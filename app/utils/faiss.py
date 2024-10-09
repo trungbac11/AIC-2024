@@ -53,7 +53,6 @@ class Myfaiss_1:
         # get id keyframe
         infos_query = list(map(self.id2img_fps.get, list(idx_image)))
         image_paths = [info for info in infos_query]
-
         return image_paths
     
 class Myfaiss_2:
@@ -85,12 +84,11 @@ class Myfaiss_2:
         scores, idx_image = self.index.search(text_feature.cpu().detach().numpy(), k=k)
         idx_image = idx_image.flatten()
         # print(self.id2img_fps)
-        print(idx_image)
+        # print(idx_image)
         
         # get id keyframe
         infos_query = list(map(self.id2img_fps.get, list(idx_image)))
         image_paths = [info for info in infos_query]
-
         return image_paths
     
     def advanced_search(self, query_text):
