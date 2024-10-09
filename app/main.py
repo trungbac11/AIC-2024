@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
-from utils.faiss import Myfaiss_1, Myfaiss_2
+from utils.faiss import Myfaiss
 from utils.translate import Translation
 from utils.object_detect import Object_Detection
 from pydantic import BaseModel
@@ -30,16 +30,15 @@ class ObjectRequestModel(BaseModel):
 # image path
 json_path = 'D:/AIC/models/full_path.json'
 
-# object detect
+# object detect path
 json_object = 'D:/AIC/object_detection/classes.json'
 mapping_path = 'D:/AIC/object_detection/mapping.json'
 vector_object = "D:/AIC/object_detection/vector_classesObject.npy"
 
 # model clip
-bin_file_1 = 'D:/AIC/test_1/keyframe_index11.bin'
-bin_file_2 = 'D:/AIC/models/keyframe_index.bin'
+bin_file = 'D:/AIC/models/keyframe_index.bin'
 
-# Load JSON dictionary
+# load JSON dictionary
 with open(json_path) as f:
     json_dict = json.load(f)
 
@@ -56,8 +55,7 @@ DictImagePath = {int(key): value for key, value in json_dict.items()}
 MAX_ID = len(DictImagePath)
 
 translater = Translation(from_lang='vi', to_lang='en')
-MyFaiss_v1 = Myfaiss_1(bin_file_1, DictImagePath, 'cpu', Translation(), task_ar_path = './../models/ViT-B-16.json', task_weight_path='./../models/tsbir_model_final.pt')
-MyFaiss_v2 = Myfaiss_2(bin_file_2, DictImagePath, 'cpu', Translation(), "ViT-L-16-SigLIP-384", 'webli')
+MyFaiss = Myfaiss(bin_file, DictImagePath, 'cpu', Translation(), "ViT-L-16-SigLIP-384", 'webli')
 Object = Object_Detection()
    
 @app.post("/search_images/")
@@ -71,9 +69,9 @@ async def search_images(query_model: QueryModel):
         print(query_translate)
         
         if selected_model == 'model1':
-            image_paths = MyFaiss_v2.text_search(query_translate, 108)
+            image_paths = MyFaiss.text_search(query_translate, 108)
         else:
-            image_paths = MyFaiss_v2.advanced_search(query_translate)
+            image_paths = MyFaiss.advanced_search(query_translate)
 
         if not image_paths:
             raise HTTPException(status_code=404, detail="No images found for the given query.")
@@ -103,20 +101,14 @@ async def send_objects(request: ObjectRequestModel):
     try:
         objects = request.objects
         classes = json_obj['classes']
-        # print(classes)
-        # print(objects)
-        # print(vector_classes)
 
         image_paths = Object.object_search(classes, objects, vector_classes, ObjectPath, DictImagePath)
-        # print (a)
         
         image_data = []
         for path in image_paths:
             image_name = os.path.basename(path)
             folder_name = os.path.basename(os.path.dirname(path))
             
-            # print(image_name)
-            # print(frame_idx)
             image_url = f"http://127.0.0.1:8000/image/{folder_name}/{image_name}"
             image_data.append({
                 "image_url": image_url,
@@ -124,9 +116,7 @@ async def send_objects(request: ObjectRequestModel):
                 "folder_name": folder_name,
             })
 
-        # Return image data as a JSON response
         return JSONResponse(content={"images": image_data})
-        # return JSONResponse(content={"message": "Objects received successfully", "objects": objects})
     
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -143,7 +133,7 @@ async def get_surrounding_images(folder_name: str, image_name: str):
         if current_index is None:
             raise HTTPException(status_code=404, detail="Image not found.")
 
-        # Lấy 25 ảnh trước và 25 ảnh sau
+        # lấy 25 ảnh trước và 25 ảnh sau
         start_index = max(0, current_index - 25)
         end_index = min(MAX_ID, current_index + 25)
 
