@@ -9,6 +9,9 @@
 ## Usage
 ### Data preparation
 
+- Download [data](https://drive.google.com/drive/folders/1dWkCC7IQIqdkwKWXg1GYrhi1OJ1buZcl): we have applied various image compression methods.
+- Create [models](https://drive.google.com/drive/folders/1dWkCC7IQIqdkwKWXg1GYrhi1OJ1buZcl) folder: have object, bins file and path to image.
+
 ### Setup 
 
 ```bash

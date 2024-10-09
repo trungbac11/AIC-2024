@@ -31,9 +31,9 @@ class ObjectRequestModel(BaseModel):
 json_path = 'D:/AIC/models/full_path.json'
 
 # object detect path
-json_object = 'D:/AIC/object_detection/classes.json'
-mapping_path = 'D:/AIC/object_detection/mapping.json'
-vector_object = "D:/AIC/object_detection/vector_classesObject.npy"
+json_object = 'D:/AIC/models/classes.json'
+mapping_path = 'D:/AIC/models/mapping.json'
+vector_object = "D:/AIC/models/vector_classesObject.npy"
 
 # model clip
 bin_file = 'D:/AIC/models/keyframe_index.bin'
